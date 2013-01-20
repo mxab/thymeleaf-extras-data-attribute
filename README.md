@@ -11,3 +11,9 @@ templateEngine.addDialect(new DataAttributeDialect());
     <body data:foo="${'bar'}" data:msg="#{my.message}" >
     </body>
     </html>
+    
+
+    <html>
+    <body data-foo"bar" data-msg="Your resolved message" >
+    </body>
+    </html>
