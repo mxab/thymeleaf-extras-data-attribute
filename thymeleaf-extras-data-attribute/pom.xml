@@ -6,6 +6,15 @@
 	<groupId>com.github.mxab.thymeleaf.extras</groupId>
 	<artifactId>thymeleaf-extras-data-attribute</artifactId>
 	<version>1.0-SNAPSHOT</version>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+
 	<properties>
 		<thymeleaf-version>2.0.15</thymeleaf-version>
 		<powermock.version>1.5</powermock.version>
@@ -70,4 +79,21 @@
 		</plugins>
 	</build>
 
+	<scm>
+		<url>https://github.com/mxab/thymeleaf-extras-data-attribute.git</url>
+		<developerConnection>scm:git:git@github.com:mxab/thymeleaf-extras-data-attribute.git</developerConnection>
+		<connection>scm:git:git://github.com/mxab/thymeleaf-extras-data-attribute.git</connection>
+	</scm>
+	<name>Thymeleaf Data Dialect</name>
+	<url>https://github.com/mxab/thymeleaf-extras-data-attribute</url>
+	<issueManagement>
+		<url>https://github.com/mxab/thymeleaf-extras-data-attribute/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+	<developers>
+		<developer>
+			<email>maxbruchmann@gmail.com</email>
+			<name>max</name>
+		</developer>
+	</developers>
 </project>
