@@ -4,7 +4,7 @@
 
 	<groupId>com.github.mxab.thymeleaf.extras</groupId>
 	<artifactId>thymeleaf-extras-data-attribute</artifactId>
-	<version>1.1-SNAPSHOT</version>
+	<version>1.1</version>
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -150,5 +150,5 @@
 			</build>
 		</profile>
 	</profiles>
-	<description>Thymeleaf Data Dialect that helps to easier write data-* attributes. Instead of th:attr=&quot;data-msg='#{my.msg}'&quot; it is possible to do data:msg=&quot;#{my.msg}&quot;</description>
+	<description>Thymeleaf Data Dialect that helps to easier write data-* attributes. Instead of th:attr="data-msg='#{my.msg}'" it is possible to do data:msg="#{my.msg}"</description>
 </project>
