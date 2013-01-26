@@ -101,7 +101,8 @@
 	<developers>
 		<developer>
 			<email>maxbruchmann@gmail.com</email>
-			<name>max</name>
+			<name>Max</name>
+			<id>max</id>
 		</developer>
 	</developers>
 	<distributionManagement>
@@ -149,4 +150,5 @@
 			</build>
 		</profile>
 	</profiles>
+	<description>Thymeleaf Data Dialect that helps to easier write data-* attributes. Instead of th:attr=&quot;data-msg='#{my.msg}'&quot; it is possible to do data:msg=&quot;#{my.msg}&quot;</description>
 </project>

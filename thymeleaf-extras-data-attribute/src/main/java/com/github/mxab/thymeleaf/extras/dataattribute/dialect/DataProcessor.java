@@ -31,20 +31,23 @@ public class DataProcessor extends AbstractProcessor {
 		Map<String, Attribute> attributeMap;
 		Element element = ((Element) node);
 		attributeMap = element.getAttributeMap();
+		String dialectPrefix = processorMatchingContext.getDialectPrefix();
 
 		for (Attribute attribute : attributeMap.values()) {
 			String dataAttrName = attribute.getUnprefixedNormalizedName();
 			String attributeName = attribute.getNormalizedName();
+			if (dialectPrefix.equals(attribute.getNormalizedPrefix())) {
+				final String attributeValue = element
+						.getAttributeValue(attributeName);
 
-			final String attributeValue = element
-					.getAttributeValue(attributeName);
+				final Object result = StandardExpressionProcessor
+						.processExpression(arguments, attributeValue);
 
-			final Object result = StandardExpressionProcessor
-					.processExpression(arguments, attributeValue);
+				element.setAttribute(String.format("data-%s", dataAttrName),
+						result.toString());
+				element.removeAttribute(attributeName);
 
-			element.setAttribute(String.format("data-%s", dataAttrName),
-					result.toString());
-			element.removeAttribute(attributeName);
+			}
 
 		}
 

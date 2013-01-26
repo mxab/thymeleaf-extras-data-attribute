@@ -14,8 +14,6 @@ import org.thymeleaf.messageresolver.AbstractMessageResolver;
 import org.thymeleaf.messageresolver.MessageResolution;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
 
-import com.github.mxab.thymeleaf.extras.dataattribute.dialect.DataAttributeDialect;
-
 public class DialectTemplateEngineTest {
 
 	@Test
@@ -31,6 +29,7 @@ public class DialectTemplateEngineTest {
 
 		String process = templateEngine.process("src/test/resources/test.html",
 				new Context());
+		System.out.println(process);
 		Document document = Jsoup.parse(process);
 
 		Element element = document.getElementsByTag("body").get(0);
