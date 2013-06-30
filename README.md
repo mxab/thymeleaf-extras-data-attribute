@@ -4,6 +4,14 @@ thymeleaf-extras-data-attribute
 Thymeleaf dialect for data attributes
 
 #Setup
+##Maven
+    <dependency>
+        <groupId>com.github.mxab.thymeleaf.extras</groupId>
+        <artifactId>thymeleaf-extras-data-attribute</artifactId>
+        <version>1.1</version>
+    </dependency>
+    
+##Code
     templateEngine.addDialect(new DataAttributeDialect());
 
 #Usage
