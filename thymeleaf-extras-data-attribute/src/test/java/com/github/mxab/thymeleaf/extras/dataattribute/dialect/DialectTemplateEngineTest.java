@@ -23,13 +23,12 @@ public class DialectTemplateEngineTest {
 		TemplateEngine templateEngine = new TemplateEngine();
 		templateEngine.setTemplateResolver(templateResolver);
 
-		AbstractMessageResolver messageResolver = new SimpleMessageResolverExtension();
+		AbstractMessageResolver messageResolver = new DummyMessageResolverExtension();
 		templateEngine.setMessageResolver(messageResolver);
 		templateEngine.addDialect(new DataAttributeDialect());
 
 		String process = templateEngine.process("src/test/resources/test.html",
 				new Context());
-		System.out.println(process);
 		Document document = Jsoup.parse(process);
 
 		Element element = document.getElementsByTag("body").get(0);
@@ -38,7 +37,28 @@ public class DialectTemplateEngineTest {
 		assertThat(element.attr("data-msg"), equalTo("Hello World"));
 	}
 
-	private final class SimpleMessageResolverExtension extends
+	@Test
+	public void testMissingProperty() {
+		FileTemplateResolver templateResolver = new FileTemplateResolver();
+
+		TemplateEngine templateEngine = new TemplateEngine();
+		templateEngine.setTemplateResolver(templateResolver);
+
+		AbstractMessageResolver messageResolver = new DummyMessageResolverExtension();
+		templateEngine.setMessageResolver(messageResolver);
+		templateEngine.addDialect(new DataAttributeDialect());
+
+		String process = templateEngine.process(
+				"src/test/resources/testMissing.html", new Context());
+		Document document = Jsoup.parse(process);
+
+		Element element = document.getElementsByTag("body").get(0);
+
+		assertThat(element.attr("data-foo"), equalTo(""));
+
+	}
+
+	private final class DummyMessageResolverExtension extends
 			AbstractMessageResolver {
 		@Override
 		public MessageResolution resolveMessage(Arguments arguments,

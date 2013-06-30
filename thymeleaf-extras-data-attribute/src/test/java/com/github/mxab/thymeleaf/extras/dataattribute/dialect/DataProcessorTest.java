@@ -21,10 +21,6 @@ import org.thymeleaf.processor.IProcessorMatcher;
 import org.thymeleaf.processor.ProcessorMatchingContext;
 import org.thymeleaf.standard.expression.StandardExpressionProcessor;
 
-import com.github.mxab.thymeleaf.extras.dataattribute.dialect.DataAttributeDialect;
-import com.github.mxab.thymeleaf.extras.dataattribute.dialect.DataAttributeMatcher;
-import com.github.mxab.thymeleaf.extras.dataattribute.dialect.DataProcessor;
-
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ Arguments.class, StandardExpressionProcessor.class })
 public class DataProcessorTest {
@@ -56,6 +52,7 @@ public class DataProcessorTest {
 					@Override
 					public Object answer(InvocationOnMock invocation)
 							throws Throwable {
+
 						return "bar";
 					}
 				});
@@ -65,6 +62,32 @@ public class DataProcessorTest {
 		assertThat(element.hasAttribute("data:foo"), is(false));
 
 		assertThat(element.getAttributeValue("data-foo"), equalTo("bar"));
+
+	}
+
+	@Test
+	public void testProcessWhenPropertyIsMissing() throws Exception {
+		Element element = new Element("div");
+		element.setAttribute("data:foo", "${missing}");
+
+		ProcessorMatchingContext processorMatchingContext = new ProcessorMatchingContext(
+				new DataAttributeDialect(), "data");
+		PowerMockito.mockStatic(StandardExpressionProcessor.class,
+				new Answer<Object>() {
+
+					@Override
+					public Object answer(InvocationOnMock invocation)
+							throws Throwable {
+
+						return null;
+					}
+				});
+		Arguments arguments = PowerMockito.mock(Arguments.class);
+		dataProcessor.doProcess(arguments, processorMatchingContext, element);
+
+		assertThat(element.hasAttribute("data:foo"), is(false));
+
+		assertThat(element.getAttributeValue("data-foo"), equalTo(""));
 
 	}
 

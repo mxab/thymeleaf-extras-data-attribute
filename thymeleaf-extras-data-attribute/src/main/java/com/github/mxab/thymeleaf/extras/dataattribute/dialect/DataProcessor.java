@@ -42,9 +42,9 @@ public class DataProcessor extends AbstractProcessor {
 
 				final Object result = StandardExpressionProcessor
 						.processExpression(arguments, attributeValue);
-
+				String data = result == null ? "" : result.toString();
 				element.setAttribute(String.format("data-%s", dataAttrName),
-						result.toString());
+						data);
 				element.removeAttribute(attributeName);
 
 			}
