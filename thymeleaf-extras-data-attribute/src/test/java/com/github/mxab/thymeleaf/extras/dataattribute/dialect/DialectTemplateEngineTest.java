@@ -2,6 +2,7 @@ package com.github.mxab.thymeleaf.extras.dataattribute.dialect;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -54,7 +55,8 @@ public class DialectTemplateEngineTest {
 
 		Element element = document.getElementsByTag("body").get(0);
 
-		assertThat(element.attr("data-foo"), equalTo(""));
+		assertThat("data-foo attribute is not rendered",
+				element.hasAttr("data-foo"), is(false));
 
 	}
 

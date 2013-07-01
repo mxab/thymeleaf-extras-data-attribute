@@ -2,6 +2,8 @@ package com.github.mxab.thymeleaf.extras.dataattribute.dialect;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.thymeleaf.Arguments;
 import org.thymeleaf.dom.Attribute;
 import org.thymeleaf.dom.Element;
@@ -13,6 +15,9 @@ import org.thymeleaf.processor.ProcessorResult;
 import org.thymeleaf.standard.expression.StandardExpressionProcessor;
 
 public class DataProcessor extends AbstractProcessor {
+
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(DataProcessor.class);
 
 	@Override
 	public int getPrecedence() {
@@ -42,9 +47,12 @@ public class DataProcessor extends AbstractProcessor {
 
 				final Object result = StandardExpressionProcessor
 						.processExpression(arguments, attributeValue);
-				String data = result == null ? "" : result.toString();
-				element.setAttribute(String.format("data-%s", dataAttrName),
-						data);
+				if (result != null) {
+					element.setAttribute(
+							String.format("data-%s", dataAttrName),
+							result.toString());
+				}
+
 				element.removeAttribute(attributeName);
 
 			}

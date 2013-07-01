@@ -9,9 +9,6 @@ import org.junit.Test;
 import org.thymeleaf.dom.Element;
 import org.thymeleaf.processor.ProcessorMatchingContext;
 
-import com.github.mxab.thymeleaf.extras.dataattribute.dialect.DataAttributeDialect;
-import com.github.mxab.thymeleaf.extras.dataattribute.dialect.DataAttributeMatcher;
-
 public class DataAttributeMatcherTest {
 
 	private DataAttributeMatcher matcher;
@@ -34,7 +31,7 @@ public class DataAttributeMatcherTest {
 		ProcessorMatchingContext processorMatchingContext = new ProcessorMatchingContext(
 				new DataAttributeDialect(), "data");
 
-		boolean matches = matcher.matches(element, processorMatchingContext);
-		assertThat(matches, is(true));
+		assertThat("matcher matches",
+				matcher.matches(element, processorMatchingContext), is(true));
 	}
 }

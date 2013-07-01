@@ -59,9 +59,11 @@ public class DataProcessorTest {
 		Arguments arguments = PowerMockito.mock(Arguments.class);
 		dataProcessor.doProcess(arguments, processorMatchingContext, element);
 
-		assertThat(element.hasAttribute("data:foo"), is(false));
+		assertThat("no data:foo attribute is left",
+				element.hasAttribute("data:foo"), is(false));
 
-		assertThat(element.getAttributeValue("data-foo"), equalTo("bar"));
+		assertThat("data-foo attribute has value of bar",
+				element.getAttributeValue("data-foo"), equalTo("bar"));
 
 	}
 
@@ -85,15 +87,18 @@ public class DataProcessorTest {
 		Arguments arguments = PowerMockito.mock(Arguments.class);
 		dataProcessor.doProcess(arguments, processorMatchingContext, element);
 
-		assertThat(element.hasAttribute("data:foo"), is(false));
+		assertThat("no data:foo attribute is left",
+				element.hasAttribute("data:foo"), is(false));
 
-		assertThat(element.getAttributeValue("data-foo"), equalTo(""));
+		assertThat("data-foo attribute is not rendered",
+				element.hasAttribute("data-foo"), is(false));
 
 	}
 
 	@Test
 	public void testPrecendence() {
-		assertThat(dataProcessor.getPrecedence(), equalTo(1100));
+		assertThat("precendence is 1100", dataProcessor.getPrecedence(),
+				equalTo(1100));
 	}
 
 }
