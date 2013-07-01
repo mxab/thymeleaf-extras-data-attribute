@@ -1,0 +1,86 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
+apply plugin: 'eclipse'
+
+group = 'com.github.mxab.thymeleaf.extras'
+version = '1.3-SNAPSHOT'
+
+description = """Thymeleaf Data Dialect"""
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+
+
+repositories {
+        
+     mavenRepo url: "http://repo.maven.apache.org/maven2"
+}
+dependencies {
+    compile group: 'org.thymeleaf', name: 'thymeleaf', version:'2.0.15'
+    testCompile group: 'junit', name: 'junit', version:'4.11'
+    testCompile group: 'org.hamcrest', name: 'hamcrest-all', version:'1.3'
+    testCompile group: 'org.jsoup', name: 'jsoup', version:'1.7.1'
+    testCompile group: 'org.powermock', name: 'powermock-module-junit4', version:'1.5'
+    testCompile group: 'org.powermock', name: 'powermock-api-mockito', version:'1.5'
+}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	classifier = 'javadoc'
+	from 'build/docs/javadoc'
+}
+ 
+task sourcesJar(type: Jar) {
+	from sourceSets.main.allSource
+	classifier = 'sources'
+}
+artifacts {
+	archives jar
+	archives javadocJar
+	archives sourcesJar
+}
+signing {
+	sign configurations.archives
+}
+
+
+uploadArchives {
+	repositories {
+		mavenDeployer {
+			beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
+ 
+			repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+			  authentication(userName: sonatypeUsername, password: sonatypePassword)
+			}
+ 
+			pom.project {
+			   name 'Thymeleaf Data Dialect'
+			   packaging 'jar'
+			   description 'Thymeleaf Data Dialect that helps to easier write data-* attributes. Instead of th:attr="data-msg=\'#{my.msg}\'" it is possible to do data:msg="#{my.msg}"'
+			   url 'https://github.com/mxab/thymeleaf-extras-data-attribute'
+ 
+			   scm {
+				   url 'https://github.com/mxab/thymeleaf-extras-data-attribute'
+				   connection 'scm:git:git://github.com/mxab/thymeleaf-extras-data-attribute.git'
+				   developerConnection 'scm:git:git@github.com:mxab/thymeleaf-extras-data-attribute.git'
+			   }
+ 
+			   licenses {
+				   license {
+					   name 'The Apache Software License, Version 2.0'
+					   url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+					   distribution 'repo'
+				   }
+			   }
+ 
+			   developers {
+				   developer {
+					   id 'max'
+					   name 'Max'
+				   }
+				  
+			   }
+		   }
+		}
+	}
+}
