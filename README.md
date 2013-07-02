@@ -8,7 +8,7 @@ Thymeleaf dialect for data attributes
     <dependency>
         <groupId>com.github.mxab.thymeleaf.extras</groupId>
         <artifactId>thymeleaf-extras-data-attribute</artifactId>
-        <version>1.1</version>
+        <version>1.2</version>
     </dependency>
     
 ##Code
