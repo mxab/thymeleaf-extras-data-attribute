@@ -5,11 +5,13 @@ import java.util.Map;
 
 import org.thymeleaf.dom.Attribute;
 import org.thymeleaf.dom.Element;
+import org.thymeleaf.dom.NestableAttributeHolderNode;
 import org.thymeleaf.dom.Node;
 import org.thymeleaf.processor.IProcessorMatcher;
 import org.thymeleaf.processor.ProcessorMatchingContext;
 
-public class DataAttributeMatcher implements IProcessorMatcher<Element> {
+public class DataAttributeMatcher implements
+		IProcessorMatcher<NestableAttributeHolderNode> {
 	@Override
 	public boolean matches(Node node, ProcessorMatchingContext context) {
 		Element element = (Element) node;
@@ -30,7 +32,7 @@ public class DataAttributeMatcher implements IProcessorMatcher<Element> {
 	}
 
 	@Override
-	public Class<? extends Element> appliesTo() {
-		return Element.class;
+	public Class<? extends NestableAttributeHolderNode> appliesTo() {
+		return NestableAttributeHolderNode.class;
 	}
 }

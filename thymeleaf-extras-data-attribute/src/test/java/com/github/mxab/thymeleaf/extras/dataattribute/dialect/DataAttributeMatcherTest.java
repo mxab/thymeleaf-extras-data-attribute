@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.thymeleaf.dom.Element;
+import org.thymeleaf.dom.NestableAttributeHolderNode;
 import org.thymeleaf.processor.ProcessorMatchingContext;
 
 public class DataAttributeMatcherTest {
@@ -21,7 +22,8 @@ public class DataAttributeMatcherTest {
 	@Test
 	public void testAppliesTo() throws Exception {
 
-		Assert.assertEquals(Element.class, matcher.appliesTo());
+		Assert.assertEquals(NestableAttributeHolderNode.class,
+				matcher.appliesTo());
 	}
 
 	@Test

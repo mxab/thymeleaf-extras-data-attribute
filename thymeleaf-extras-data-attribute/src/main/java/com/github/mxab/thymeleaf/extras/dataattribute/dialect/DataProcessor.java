@@ -39,6 +39,7 @@ public class DataProcessor extends AbstractProcessor {
 		String dialectPrefix = processorMatchingContext.getDialectPrefix();
 
 		for (Attribute attribute : attributeMap.values()) {
+
 			String dataAttrName = attribute.getUnprefixedNormalizedName();
 			String attributeName = attribute.getNormalizedName();
 			if (dialectPrefix.equals(attribute.getNormalizedPrefix())) {
