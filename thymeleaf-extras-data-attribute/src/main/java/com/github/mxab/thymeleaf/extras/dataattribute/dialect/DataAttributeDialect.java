@@ -7,14 +7,10 @@ import org.thymeleaf.dialect.AbstractDialect;
 import org.thymeleaf.processor.IProcessor;
 
 public class DataAttributeDialect extends AbstractDialect {
+
 	@Override
 	public String getPrefix() {
 		return "data";
-	}
-
-	@Override
-	public boolean isLenient() {
-		return false;
 	}
 
 	@Override

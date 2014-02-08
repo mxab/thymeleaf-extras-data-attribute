@@ -16,12 +16,6 @@ public class DataAttributeDialectTest {
 	}
 
 	@Test
-	public void testLenient() {
-		DataAttributeDialect dialect = new DataAttributeDialect();
-		assertThat(dialect.isLenient(), equalTo(false));
-	}
-
-	@Test
 	public void testProcessors() {
 		DataAttributeDialect dialect = new DataAttributeDialect();
 		assertThat("processors", dialect.getProcessors(), is(notNullValue()));
