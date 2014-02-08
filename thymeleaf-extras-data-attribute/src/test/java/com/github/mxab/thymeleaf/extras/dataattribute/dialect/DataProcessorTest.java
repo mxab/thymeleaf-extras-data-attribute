@@ -9,6 +9,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
@@ -19,10 +20,12 @@ import org.thymeleaf.dom.Element;
 import org.thymeleaf.dom.Node;
 import org.thymeleaf.processor.IProcessorMatcher;
 import org.thymeleaf.processor.ProcessorMatchingContext;
-import org.thymeleaf.standard.expression.StandardExpressionProcessor;
+import org.thymeleaf.standard.expression.IStandardExpression;
+import org.thymeleaf.standard.expression.IStandardExpressionParser;
+import org.thymeleaf.standard.expression.StandardExpressions;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ Arguments.class, StandardExpressionProcessor.class })
+@PrepareForTest({ Arguments.class, StandardExpressions.class })
 public class DataProcessorTest {
 	DataProcessor dataProcessor;
 
@@ -46,16 +49,8 @@ public class DataProcessorTest {
 
 		ProcessorMatchingContext processorMatchingContext = new ProcessorMatchingContext(
 				new DataAttributeDialect(), "data");
-		PowerMockito.mockStatic(StandardExpressionProcessor.class,
-				new Answer<Object>() {
 
-					@Override
-					public Object answer(InvocationOnMock invocation)
-							throws Throwable {
-
-						return "bar";
-					}
-				});
+		mockStandardExpression("bar");
 		Arguments arguments = PowerMockito.mock(Arguments.class);
 		dataProcessor.doProcess(arguments, processorMatchingContext, element);
 
@@ -67,6 +62,41 @@ public class DataProcessorTest {
 
 	}
 
+	public void mockStandardExpression(final String parseResult) {
+
+		final IStandardExpression expression = Mockito.mock(
+				IStandardExpression.class, new Answer<Object>() {
+
+					@Override
+					public Object answer(InvocationOnMock invocation)
+							throws Throwable {
+
+						return parseResult;
+					}
+				});
+		final IStandardExpressionParser expressionParser = Mockito.mock(
+				IStandardExpressionParser.class, new Answer<Object>() {
+
+					@Override
+					public Object answer(InvocationOnMock invocation)
+							throws Throwable {
+
+						return expression;
+					}
+				});
+
+		PowerMockito.mockStatic(StandardExpressions.class,
+				new Answer<IStandardExpressionParser>() {
+
+					@Override
+					public IStandardExpressionParser answer(
+							InvocationOnMock invocation) throws Throwable {
+
+						return expressionParser;
+					}
+				});
+	}
+
 	@Test
 	public void testProcessWhenPropertyIsMissing() throws Exception {
 		Element element = new Element("div");
@@ -74,16 +104,7 @@ public class DataProcessorTest {
 
 		ProcessorMatchingContext processorMatchingContext = new ProcessorMatchingContext(
 				new DataAttributeDialect(), "data");
-		PowerMockito.mockStatic(StandardExpressionProcessor.class,
-				new Answer<Object>() {
-
-					@Override
-					public Object answer(InvocationOnMock invocation)
-							throws Throwable {
-
-						return null;
-					}
-				});
+		mockStandardExpression(null);
 		Arguments arguments = PowerMockito.mock(Arguments.class);
 		dataProcessor.doProcess(arguments, processorMatchingContext, element);
 

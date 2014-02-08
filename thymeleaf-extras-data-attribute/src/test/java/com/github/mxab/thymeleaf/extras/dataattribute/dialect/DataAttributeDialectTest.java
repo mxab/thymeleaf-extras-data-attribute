@@ -7,8 +7,6 @@ import static org.hamcrest.Matchers.notNullValue;
 
 import org.junit.Test;
 
-import com.github.mxab.thymeleaf.extras.dataattribute.dialect.DataAttributeDialect;
-
 public class DataAttributeDialectTest {
 
 	@Test
