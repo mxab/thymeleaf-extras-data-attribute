@@ -12,13 +12,13 @@ public class DataAttributeDialectTest {
 	@Test
 	public void testPrefix() {
 		DataAttributeDialect dialect = new DataAttributeDialect();
-		assertThat(dialect.getPrefix(), is(equalTo("data")));
+		assertThat(dialect.getPrefix(), is(equalTo(DataAttributeDialect.PREFIX)));
 	}
 
 	@Test
 	public void testProcessors() {
 		DataAttributeDialect dialect = new DataAttributeDialect();
-		assertThat("processors", dialect.getProcessors(), is(notNullValue()));
-		assertThat(dialect.getProcessors().size(), is(equalTo(1)));
+		assertThat("processors", dialect.getProcessors(dialect.getPrefix()), is(notNullValue()));
+		assertThat(dialect.getProcessors(dialect.getPrefix()).size(), is(equalTo(2)));
 	}
 }

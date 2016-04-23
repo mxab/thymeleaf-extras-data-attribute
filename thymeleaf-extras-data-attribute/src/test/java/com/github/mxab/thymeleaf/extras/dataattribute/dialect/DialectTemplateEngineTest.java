@@ -8,11 +8,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.Test;
-import org.thymeleaf.Arguments;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.messageresolver.AbstractMessageResolver;
-import org.thymeleaf.messageresolver.MessageResolution;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
 
 public class DialectTemplateEngineTest {
@@ -63,10 +62,16 @@ public class DialectTemplateEngineTest {
 	private final class DummyMessageResolverExtension extends
 			AbstractMessageResolver {
 		@Override
-		public MessageResolution resolveMessage(Arguments arguments,
+		public String resolveMessage(ITemplateContext context, Class<?> origin,
 				String key, Object[] messageParameters) {
-			return key.equals("my.message") ? new MessageResolution(
-					"Hello World") : null;
+			return key.equals("my.message") ? "Hello World" : null;
+		}
+
+		@Override
+		public String createAbsentMessageRepresentation(
+				ITemplateContext context, Class<?> origin, String key,
+				Object[] messageParameters) {
+			return null;
 		}
 	}
 }
