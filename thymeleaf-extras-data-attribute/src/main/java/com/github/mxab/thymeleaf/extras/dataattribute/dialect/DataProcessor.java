@@ -14,6 +14,7 @@ import org.thymeleaf.processor.element.MatchingAttributeName;
 import org.thymeleaf.processor.element.MatchingElementName;
 import org.thymeleaf.standard.expression.IStandardExpression;
 import org.thymeleaf.standard.expression.IStandardExpressionParser;
+import org.thymeleaf.standard.expression.NoOpToken;
 import org.thymeleaf.standard.expression.StandardExpressions;
 import org.thymeleaf.standard.util.StandardProcessorUtils;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -30,7 +31,7 @@ public class DataProcessor extends AbstractProcessor implements IElementTagProce
 	public DataProcessor(TemplateMode templateMode, String dialectPrefix) {
 		super(templateMode, PRECEDENCE);
 		this.dialectPrefix = dialectPrefix;
-		this.matchingAttributeName = MatchingAttributeName.forAllAttributesWithPrefix(templateMode, dialectPrefix);
+		matchingAttributeName = MatchingAttributeName.forAllAttributesWithPrefix(templateMode, dialectPrefix);
 	}
 
 	@Override
@@ -69,10 +70,18 @@ public class DataProcessor extends AbstractProcessor implements IElementTagProce
 			}
 
 			String targetAttrCompleteName = String.format("data-%s", attributeName.getAttributeName());
+
+			if (expressionResult != NoOpToken.VALUE) {
+				structureHandler.removeAttribute(targetAttrCompleteName);
+			}
+
 			String newAttributeValue = HtmlEscape.escapeHtml4Xml(expressionResult == null ? null : expressionResult.toString());
 
-			structureHandler.removeAttribute(targetAttrCompleteName);
-			StandardProcessorUtils.replaceAttribute(structureHandler, attributeName, attributeDefinition, targetAttrCompleteName, (newAttributeValue == null ? "" : newAttributeValue));
+			if (expressionResult == NoOpToken.VALUE || newAttributeValue == null || newAttributeValue.length() == 0) {
+				structureHandler.removeAttribute(attributeName);
+			} else {
+				StandardProcessorUtils.replaceAttribute(structureHandler, attributeName, attributeDefinition, targetAttrCompleteName, newAttributeValue);
+			}
 		} catch (TemplateProcessingException e) {
 			if (!e.hasTemplateName()) {
 				e.setTemplateName(attribute.getTemplateName());
@@ -87,4 +96,5 @@ public class DataProcessor extends AbstractProcessor implements IElementTagProce
 			throw new TemplateProcessingException("Error during execution of processor '" + getClass().getName() + "'", attribute.getTemplateName(), attribute.getLine(), attribute.getCol(), e);
 		}
 	}
+
 }

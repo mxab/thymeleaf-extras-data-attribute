@@ -1,24 +1,57 @@
 package com.github.mxab.thymeleaf.extras.dataattribute.dialect;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import java.util.Arrays;
 
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.thymeleaf.standard.StandardDialect;
+import org.thymeleaf.testing.templateengine.engine.TestExecutor;
 
 public class DataAttributeDialectTest {
 
-	@Test
-	public void testPrefix() {
-		DataAttributeDialect dialect = new DataAttributeDialect();
-		assertThat(dialect.getPrefix(), is(equalTo(DataAttributeDialect.PREFIX)));
+	private static final TestExecutor executor = new TestExecutor();
+
+	@BeforeClass
+	public static void configureSequence() {
+		executor.setDialects(Arrays.asList(new StandardDialect(),
+				new DataAttributeDialect()));
+	}
+
+	@Before
+	public void configureTest() {
+		executor.reset();
 	}
 
 	@Test
-	public void testProcessors() {
-		DataAttributeDialect dialect = new DataAttributeDialect();
-		assertThat("processors", dialect.getProcessors(dialect.getPrefix()), is(notNullValue()));
-		assertThat(dialect.getProcessors(dialect.getPrefix()).size(), is(equalTo(2)));
+	public void testExisting() {
+		executor.execute("classpath:existing.thtest");
+		Assert.assertTrue(executor.isAllOK());
 	}
+
+	@Test
+	public void testMessage() {
+		executor.execute("classpath:message.thtest");
+		Assert.assertTrue(executor.isAllOK());
+	}
+
+	@Test
+	public void testMissing() {
+		executor.execute("classpath:missing.thtest");
+		Assert.assertTrue(executor.isAllOK());
+	}
+
+	@Test
+	public void testNoOp() {
+		executor.execute("classpath:noop.thtest");
+		Assert.assertTrue(executor.isAllOK());
+	}
+
+	@Test
+	public void testSimple() {
+		executor.execute("classpath:simple.thtest");
+		Assert.assertTrue(executor.isAllOK());
+	}
+
 }
