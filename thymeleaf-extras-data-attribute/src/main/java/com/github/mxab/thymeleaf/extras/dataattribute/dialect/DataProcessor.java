@@ -48,7 +48,7 @@ public class DataProcessor extends AbstractProcessor implements IElementTagProce
 	public void process(ITemplateContext context, IProcessableElementTag tag,
 			IElementTagStructureHandler structureHandler) {
 		for (IAttribute attribute : tag.getAllAttributes()) {
-			AttributeDefinition attributeDefinition = attribute.getDefinition();
+			AttributeDefinition attributeDefinition = attribute.getAttributeDefinition();
 			AttributeName attributeName = attributeDefinition.getAttributeName();
 			if (attributeName.isPrefixed() && TextUtil.equals(getTemplateMode().isCaseSensitive(), attributeName.getPrefix(), dialectPrefix)) {
 				processDataAttribute(context, attribute, attributeDefinition, attributeName, structureHandler);

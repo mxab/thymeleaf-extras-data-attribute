@@ -18,8 +18,8 @@ repositories {
      mavenCentral()
 }
 dependencies {
-    compile 'org.thymeleaf:thymeleaf:3.0.0.BETA03'
-    testCompile 'org.thymeleaf:thymeleaf-testing:3.0.0.BETA03'
+    compile 'org.thymeleaf:thymeleaf:3.0.0.RELEASE'
+    testCompile 'org.thymeleaf:thymeleaf-testing:3.0.0.RELEASE'
     testCompile 'junit:junit:4.12'
 }
 task javadocJar(type: Jar, dependsOn: javadoc) {
