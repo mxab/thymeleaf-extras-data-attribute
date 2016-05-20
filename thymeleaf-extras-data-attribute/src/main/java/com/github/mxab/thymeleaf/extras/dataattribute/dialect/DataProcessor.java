@@ -1,6 +1,5 @@
 package com.github.mxab.thymeleaf.extras.dataattribute.dialect;
 
-import org.attoparser.util.TextUtil;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.engine.AttributeDefinition;
 import org.thymeleaf.engine.AttributeName;
@@ -25,12 +24,10 @@ public class DataProcessor extends AbstractProcessor implements IElementTagProce
 
 	public static final int PRECEDENCE = 1100;
 
-	private final String dialectPrefix;
 	private final MatchingAttributeName matchingAttributeName;
 
 	public DataProcessor(TemplateMode templateMode, String dialectPrefix) {
 		super(templateMode, PRECEDENCE);
-		this.dialectPrefix = dialectPrefix;
 		matchingAttributeName = MatchingAttributeName.forAllAttributesWithPrefix(templateMode, dialectPrefix);
 	}
 
@@ -45,12 +42,11 @@ public class DataProcessor extends AbstractProcessor implements IElementTagProce
 	}
 
 	@Override
-	public void process(ITemplateContext context, IProcessableElementTag tag,
-			IElementTagStructureHandler structureHandler) {
+	public void process(ITemplateContext context, IProcessableElementTag tag, IElementTagStructureHandler structureHandler) {
 		for (IAttribute attribute : tag.getAllAttributes()) {
 			AttributeDefinition attributeDefinition = attribute.getAttributeDefinition();
 			AttributeName attributeName = attributeDefinition.getAttributeName();
-			if (attributeName.isPrefixed() && TextUtil.equals(getTemplateMode().isCaseSensitive(), attributeName.getPrefix(), dialectPrefix)) {
+			if (matchingAttributeName.matches(attributeName)) {
 				processDataAttribute(context, attribute, attributeDefinition, attributeName, structureHandler);
 			}
 		}
