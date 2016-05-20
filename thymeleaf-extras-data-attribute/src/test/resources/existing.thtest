@@ -1,0 +1,13 @@
+%INPUT
+<!DOCTYPE html>
+<html xmlns:data="http://www.thymeleaf.org/extras/data">
+	<body data-hello="foobar" data:hello="'world'">
+	</body>
+</html>
+# ------------------------------------------
+%OUTPUT 
+<!DOCTYPE html>
+<html>
+	<body data-hello="world">
+	</body>
+</html>

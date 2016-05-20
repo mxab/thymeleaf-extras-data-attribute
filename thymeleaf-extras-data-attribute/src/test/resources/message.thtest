@@ -1,0 +1,16 @@
+%MESSAGES
+hello = world
+# ------------------------------------------
+%INPUT
+<!DOCTYPE html>
+<html xmlns:data="http://www.thymeleaf.org/extras/data">
+	<body data:hello="#{hello}">
+	</body>
+</html>
+# ------------------------------------------
+%OUTPUT 
+<!DOCTYPE html>
+<html>
+	<body data-hello="world">
+	</body>
+</html>
