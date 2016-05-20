@@ -11,7 +11,7 @@ description = """Thymeleaf Data Dialect"""
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
 
-
+wrapper.gradleVersion = "2.13"
 
 repositories {
         
@@ -72,8 +72,12 @@ uploadArchives {
  
 			   developers {
 				   developer {
-					   id 'max'
-					   name 'Max'
+					   id 'mxab'
+					   name 'Max Bruchmann'
+				   }
+				   developer {
+					   id 'dtrunk90'
+					   name 'Danny Trunk'
 				   }
 				  
 			   }
