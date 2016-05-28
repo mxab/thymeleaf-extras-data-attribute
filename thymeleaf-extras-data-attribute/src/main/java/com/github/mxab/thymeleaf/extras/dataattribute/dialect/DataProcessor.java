@@ -1,7 +1,7 @@
 package com.github.mxab.thymeleaf.extras.dataattribute.dialect;
 
+import org.attoparser.util.TextUtil;
 import org.thymeleaf.context.ITemplateContext;
-import org.thymeleaf.engine.AttributeDefinition;
 import org.thymeleaf.engine.AttributeName;
 import org.thymeleaf.exceptions.TemplateProcessingException;
 import org.thymeleaf.model.IAttribute;
@@ -15,20 +15,21 @@ import org.thymeleaf.standard.expression.IStandardExpression;
 import org.thymeleaf.standard.expression.IStandardExpressionParser;
 import org.thymeleaf.standard.expression.NoOpToken;
 import org.thymeleaf.standard.expression.StandardExpressions;
-import org.thymeleaf.standard.util.StandardProcessorUtils;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.util.EscapedAttributeUtils;
 import org.unbescape.html.HtmlEscape;
 
 public class DataProcessor extends AbstractProcessor implements IElementTagProcessor {
 
-	public static final int PRECEDENCE = 1100;
+	public static final int PRECEDENCE = Integer.MAX_VALUE;
 
+	private final String dialectPrefix;
 	private final MatchingAttributeName matchingAttributeName;
 
 	public DataProcessor(TemplateMode templateMode, String dialectPrefix) {
 		super(templateMode, PRECEDENCE);
-		matchingAttributeName = MatchingAttributeName.forAllAttributesWithPrefix(templateMode, dialectPrefix);
+		this.dialectPrefix = dialectPrefix;
+		matchingAttributeName = MatchingAttributeName.forAllAttributesWithPrefix(getTemplateMode(), dialectPrefix);
 	}
 
 	@Override
@@ -43,19 +44,35 @@ public class DataProcessor extends AbstractProcessor implements IElementTagProce
 
 	@Override
 	public void process(ITemplateContext context, IProcessableElementTag tag, IElementTagStructureHandler structureHandler) {
-		for (IAttribute attribute : tag.getAllAttributes()) {
-			AttributeDefinition attributeDefinition = attribute.getAttributeDefinition();
-			AttributeName attributeName = attributeDefinition.getAttributeName();
-			if (matchingAttributeName.matches(attributeName)) {
-				processDataAttribute(context, attribute, attributeDefinition, attributeName, structureHandler);
+		TemplateMode templateMode = getTemplateMode();
+		IAttribute[] attributes = tag.getAllAttributes();
+
+		for (IAttribute attribute : attributes) {
+			AttributeName attributeName = attribute.getAttributeDefinition().getAttributeName();
+			if (attributeName.isPrefixed()) {
+				if (TextUtil.equals(templateMode.isCaseSensitive(), attributeName.getPrefix(), dialectPrefix)) {
+					processDataAttribute(context, tag, attribute, structureHandler);
+				}
 			}
 		}
 	}
 
-	private void processDataAttribute(ITemplateContext context, IAttribute attribute, AttributeDefinition attributeDefinition, AttributeName attributeName, IElementTagStructureHandler structureHandler) {
+	private void processDataAttribute(ITemplateContext context, IProcessableElementTag tag, IAttribute attribute, IElementTagStructureHandler structureHandler) {
 		try {
-			IStandardExpressionParser expressionParser = StandardExpressions.getExpressionParser(context.getConfiguration());
+			AttributeName attributeName = attribute.getAttributeDefinition().getAttributeName();
 			String attributeValue = EscapedAttributeUtils.unescapeAttribute(context.getTemplateMode(), attribute.getValue());
+
+			String originalCompleteAttributeName = attribute.getAttributeCompleteName();
+			String canonicalAttributeName = attributeName.getAttributeName();
+
+			String newAttributeName = "data-";
+			if (TextUtil.endsWith(true, originalCompleteAttributeName, canonicalAttributeName)) {
+				newAttributeName += canonicalAttributeName;
+			} else {
+				newAttributeName += originalCompleteAttributeName.substring(originalCompleteAttributeName.length() - canonicalAttributeName.length());
+			}
+
+			IStandardExpressionParser expressionParser = StandardExpressions.getExpressionParser(context.getConfiguration());
 
 			Object expressionResult;
 			if (attributeValue != null) {
@@ -65,22 +82,21 @@ public class DataProcessor extends AbstractProcessor implements IElementTagProce
 				expressionResult = null;
 			}
 
-			String targetAttrCompleteName = String.format("data-%s", attributeName.getAttributeName());
-
-			if (expressionResult != NoOpToken.VALUE) {
-				structureHandler.removeAttribute(targetAttrCompleteName);
+			if (expressionResult == NoOpToken.VALUE) {
+				structureHandler.removeAttribute(attributeName);
+				return;
 			}
 
 			String newAttributeValue = HtmlEscape.escapeHtml4Xml(expressionResult == null ? null : expressionResult.toString());
-
-			if (expressionResult == NoOpToken.VALUE || newAttributeValue == null || newAttributeValue.length() == 0) {
+			if (newAttributeValue == null || newAttributeValue.length() == 0) {
+				structureHandler.removeAttribute(newAttributeName);
 				structureHandler.removeAttribute(attributeName);
 			} else {
-				StandardProcessorUtils.replaceAttribute(structureHandler, attributeName, attributeDefinition, targetAttrCompleteName, newAttributeValue);
+				structureHandler.replaceAttribute(attributeName, newAttributeName, newAttributeValue == null? "" : newAttributeValue);
 			}
 		} catch (TemplateProcessingException e) {
 			if (!e.hasTemplateName()) {
-				e.setTemplateName(attribute.getTemplateName());
+				e.setTemplateName(tag.getTemplateName());
 			}
 
 			if (!e.hasLineAndCol()) {
@@ -89,7 +105,7 @@ public class DataProcessor extends AbstractProcessor implements IElementTagProce
 
 			throw e;
 		} catch (Exception e) {
-			throw new TemplateProcessingException("Error during execution of processor '" + getClass().getName() + "'", attribute.getTemplateName(), attribute.getLine(), attribute.getCol(), e);
+			throw new TemplateProcessingException("Error during execution of processor '" + getClass().getName() + "'", tag.getTemplateName(), attribute.getLine(), attribute.getCol(), e);
 		}
 	}
 
